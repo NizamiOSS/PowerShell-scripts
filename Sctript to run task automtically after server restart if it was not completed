@@ -1,0 +1,9 @@
+#If you have an important nightly task that was interrupted due to unplanned server restart, you can configure this script to run the task once the server is up.
+
+#Replace task_name with a windows task name you need. The script can be put on a bat file and be configured via Windows Task Scheduler to be run on a server startup.
+
+if ( ((Get-ScheduledTask -TaskName task_name | Get-ScheduledTaskInfo).LastTaskResult -ne 0) -and 
+    ( (Get-Date -UFormat %p) -eq "AM" ) -and ((Get-ScheduledTask -TaskName task_name).State -ne 'Disabled') )
+ {
+   Start-ScheduledTask -TaskName "task_name"
+ }
