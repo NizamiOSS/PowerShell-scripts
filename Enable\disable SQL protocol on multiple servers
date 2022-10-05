@@ -1,0 +1,14 @@
+#You create txt files with list of servers where script should applied
+$list = Get-Content "\Path to file\Servers.txt"
+
+foreach ($ComputerName in $list)
+{
+[reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement")
+
+$ComputerName
+
+$mc = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer -argumentlist $ComputerName
+$sm = $mc.ServerInstances.ServerProtocols |  Where-Object Displayname -EQ 'Protocol Name' #here you put name of SQL Protocol
+$sm.IsEnabled = $True
+$sm.Alter()
+}
